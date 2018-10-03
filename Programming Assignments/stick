@@ -1,0 +1,90 @@
+#!/bin/bash
+
+#FUNCTIONS
+
+# Show the number of sticks left
+printSticks()
+{
+	for i in `seq 1 $totalSticks`
+	do
+		echo -n "|"
+	done
+	echo " ($totalSticks)"
+}
+
+# Greeting 
+echo
+echo "Welcome to the stick game!"
+echo
+echo "How this game works:"
+echo "2 players take turns picking either 1, 2 or 3 sticks from a pile. Whoever picks the last stick wins."
+
+# How many sticks
+echo "How many sticks do you want to start with? (must be an integer >= 10)"
+flag=0
+while [ $flag == 0 ]
+do
+	read totalSticks
+	if (( $((totalSticks)) < 10 ))
+	then
+		echo "Your number must be greater than or equal to 10!"
+	else
+		if ! [[ $totalSticks =~ ^-?[0-9]+$ ]];
+		then
+			echo "Your input is not an integer!"
+		else
+			flag=1
+		fi
+	fi
+done
+
+# Who goes first
+echo "Who should go first? (enter c computer or u for user)"
+flag=0
+while [ $flag == 0 ]
+do
+	read whoGoes
+	if [[ ($whoGoes == 'c') || ($whoGoes == 'u') ]];
+	then
+		flag=1
+		if [[ $whoGoes == 'c' ]];
+		then
+			echo "Great! The computer will start it off!"
+		else
+			echo "Great! You will start it off!"
+		fi
+	else
+		echo "Please enter c computer or u for user."
+	fi
+done
+
+# Print Inital stick amount
+printSticks
+
+# Back and forth from the player to the computer
+flag=0
+iFlag=0
+while [[ $flag == 0 ]];
+do
+	# User goes
+	if [[ $whoGoes == 'u' ]];
+	then
+		echo "It is your turn! How many sticks would you like to take? 1, 2 or 3?"
+		read uTakeout
+		if (( ( $uTakeout <= 3 ) && ( $uTakeout >=1 ) ));
+		then
+			totalSticks=$(($totalSticks-$uTakeout))
+			printSticks
+			iFlag=1
+		else
+			echo "Please choose 1, 2, or 3 sticks to take out."
+			read uTakeout
+			if [[  ]]
+		fi
+		flag=1
+		whoGoes='c'
+	fi
+
+	# Computer Goes
+done
+

@@ -1,0 +1,27 @@
+#!/bin/bash
+# Author: Harinder Gakhal
+: '
+For ODP405, you need to write a script that either accepts a
+command line argument or program input.
+The script sould double the argument and print that doubled value.
+
+Assuming your script is named "odp405"
+
+odp405 17
+
+should print a single line:
+34
+
+odp405 (with no arguments) should prompt with a single character ">"
+after which the user enters a number. It then prints twice that number.
+'
+
+if [ $# -eq 0 ]; then
+    echo -n ">"
+    read x
+	echo $(($x*2))
+else
+	echo $(($1*2))
+fi
+
+
