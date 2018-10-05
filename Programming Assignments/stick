@@ -1,5 +1,15 @@
 #!/bin/bash
 
+#############################################################################################################################
+## Harinder Gakhal                                                                                                         ##
+## CSE 224                                                                                                                 ##
+## 10/04/2018                                                                                                              ##
+## Programming Assignment 1                                                                                                ##
+## This BASH script is a text based game that will challenge a player to be the last one to remove sticks from a set.      ##
+## The user will decide how many sticks to start off with as well as decide whether the computer goes first, or the users. ##
+## Once the last sick is taken out, the winner will be decided.                                                            ##
+#############################################################################################################################
+
 #FUNCTIONS
 
 # Show the number of sticks left
@@ -25,11 +35,11 @@ flag=0
 while [ $flag == 0 ]
 do
 	read totalSticks
-	if (( $((totalSticks)) < 10 ))
+	if (( $((totalSticks)) < 10 )); 							# Check if more than 10
 	then
 		echo "Your number must be greater than or equal to 10!"
 	else
-		if ! [[ $totalSticks =~ ^-?[0-9]+$ ]];
+		if ! [[ $totalSticks =~ ^-?[0-9]+$ ]];					# Makes sure whats entered is an integer
 		then
 			echo "Your input is not an integer!"
 		else
@@ -44,7 +54,7 @@ flag=0
 while [ $flag == 0 ]
 do
 	read whoGoes
-	if [[ ($whoGoes == 'c') || ($whoGoes == 'u') ]];
+	if [[ ($whoGoes == 'c') || ($whoGoes == 'u') ]];			# Only can be either c or u
 	then
 		flag=1
 		if [[ $whoGoes == 'c' ]];
@@ -63,7 +73,6 @@ printSticks
 
 # Back and forth from the player to the computer
 flag=0
-iFlag=0
 while [[ $flag == 0 ]];
 do
 	# User goes
@@ -71,20 +80,75 @@ do
 	then
 		echo "It is your turn! How many sticks would you like to take? 1, 2 or 3?"
 		read uTakeout
-		if (( ( $uTakeout <= 3 ) && ( $uTakeout >=1 ) ));
+		if (( ( $uTakeout <= 3 ) && ( $uTakeout >= 1 ) ));
 		then
 			totalSticks=$(($totalSticks-$uTakeout))
+
+			# Check if won
+			if [[ $totalSticks == 0 ]]; 						# If winner, end game
+			then
+				break
+			fi
 			printSticks
-			iFlag=1
 		else
-			echo "Please choose 1, 2, or 3 sticks to take out."
+			echo "Please choose 1, 2, or 3 sticks to take out. You have one more try."
 			read uTakeout
-			if [[  ]]
+			if !(( ( $uTakeout <= 3 ) && ( $uTakeout >=1 ) ));	# User will have 1 more try to enter valid number
+			then
+				echo "You have entered an invalid number."
+				echo "Quitting game..."
+				exit
+			else
+				totalSticks=$((totalSticks-uTakeout))
+				printSticks
+			fi
 		fi
-		flag=1
 		whoGoes='c'
 	fi
 
 	# Computer Goes
+	if [[ $whoGoes == 'c' ]];
+	then
+		echo "Now its my turn!"									# Makes the computer more life like
+		echo -n "Thinking"
+		sleep .5
+		echo -n "."
+		sleep .5
+		echo -n "."
+		sleep .5
+		echo "."
+
+		cTakeout=$((totalSticks % 4))
+		if [[ $cTakeout == 0 ]];
+		then
+			echo "Taking out 1 stick."
+			totalSticks=$((totalSticks-1))
+
+			# Check if won
+			if [[ $totalSticks == 0 ]]; 						# If winner, end game
+			then
+				break
+			fi
+		else
+			echo "Taking out $cTakeout sticks."
+			totalSticks=$((totalSticks-cTakeout))
+
+			# Check if won
+			if [[ $totalSticks == 0 ]]; 						# If winner, end game
+			then
+				break
+			fi
+		fi
+		printSticks
+		whoGoes='u'
+	fi
 done
 
+printSticks
+# Declare winner
+if [[ $whoGoes == 'u' ]]; 
+then
+	echo "You won!"
+else
+	echo "The computer won!"
+fi
