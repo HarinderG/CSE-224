@@ -1,2 +1,4 @@
+#!/bin/bash
+
 read x
 echo `expr $x \* 2`
