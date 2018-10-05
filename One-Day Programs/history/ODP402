@@ -1,1 +1,10 @@
+#!/bin/bash
+
+#	Harinder Gakhal
+#	10/05/2018
+#	CSE 224
+#	ODP402
+#	This is similar to ODP401, but you must write a shell script that
+#	prints an image of a cow saying "Hello World" 
+
 cowsay Hello World
