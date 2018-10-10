@@ -23,9 +23,40 @@
 
 #include <stdio.h>
 
-int main(int argc, char const *argv[])
+int main(int argc, char **argv)
 {
-	
+	// initialize variables
+	char readIn[20];
+	char whoGoes = 'u';
+	int flag = 0;
+	int totalSticks;
+
+	// Greet user
+	printf("Welcome to the stick game!\n");
+	printf("How this game works:\n");
+	printf("2 players take turns picking either 1, 2 or 3 sticks from a pile. Whoever picks the last stick wins.\n");
+
+	// Ask user for totalSticks
+	printf("How many sticks do you want to start with? (must be an integer >= 10)\n");
+	// Ask until valid
+	while(flag == 0)
+	{
+		fgets(readIn, 20, stdin);
+
+		if (!(sscanf(readIn, "%d", &totalSticks)))
+		{
+			printf("Please enter an integer!\n");
+		}
+		else if (totalSticks < 10)
+		{
+			printf("Your number must be greater than or equal to 10!\n");
+		}
+		else
+		{
+			flag = 1;
+		}
+	}
+
 
 	return 0;
 }
