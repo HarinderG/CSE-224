@@ -1,3 +1,9 @@
+/*
+	Harinder Gakhal
+	10/11/18
+	This main.c file is used to test pick.c in the same directory.
+*/
+
 #include <stdio.h>
 
 int pick(int num);
