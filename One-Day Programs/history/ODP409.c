@@ -21,17 +21,11 @@ int main(int argc, char **argv)
 	double num;
 		
 	if (argc != 2)
-	{
 		printf("ERR\n");
-	}
 	else if (!(sscanf(argv[1], "%lf", &num)))
-	{
 		printf("INV\n");
-	}
 	else if (num < 0)
-	{
 		printf("NEG\n");
-	}
 	else
 	{
 		num = sqrt(num);
