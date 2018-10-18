@@ -23,9 +23,12 @@
 
 #include <stdio.h>
 
-// Functoin prototypes
+// Function prototypes
 void printSticks(int stickCount);
-int checkInput(int num);
+int isValid(char *);
+
+// Global variable
+int totalSticks;
 
 int main(int argc, char **argv)
 {
@@ -33,7 +36,6 @@ int main(int argc, char **argv)
 	char readIn[10];
 	char whoGoes = 'u';
 	int flag = 0;
-	int totalSticks;
 
 	// Greet user
 	printf("Welcome to the stick game!\n");
@@ -45,47 +47,32 @@ int main(int argc, char **argv)
 	// If totalSticks is given in command line arg
 	if (argc == 2)
 	{
-		if (!(sscanf(argv[1], "%d", &totalSticks)))
-			printf("Please enter an integer!\n");
-		else if (totalSticks < 10)
-			printf("Your number must be greater than or equal to 10!\n");
+		if (isValid(argv[1]))
+			printSticks(totalSticks); // Print intial stick #
 		else
-		{
-			flag = 1;	//if command line arg is valid, skip next while loop.
-			printSticks(totalSticks); //Print intial stick #
-		}
+			return 0;
 	}
-	else if (argc > 2)
+	else if (argc > 2) // Too many args
 		printf("Too many command line arguments! Try again.\n");
-
-	// Ask until valid
-	while(flag == 0)
+	else if (argc == 1) // Ask via program
 	{
 		fgets(readIn, 10, stdin);
-
-		if (!(sscanf(readIn, "%d", &totalSticks)))
-		{
-			printf("Please enter an integer!\n");
-		}
-		else if (totalSticks < 10)
-		{
-			printf("Your number must be greater than or equal to 10!\n");
-		}
+		
+		if (isValid(readIn))
+			printSticks(totalSticks); // Print intial stick #
 		else
-		{
-			flag = 1;
-			printSticks(totalSticks); //Print intial stick #
-		}
+			return 0;
 	}
 
 	// Computer and user back and forth
 	printf("You will start it off!\n");
-	flag = 0;
 	while(flag == 0)
 	{
 		if (whoGoes == 'u')
 		{
 			printf("It is your turn! How many sticks would you like to take? 1, 2 or 3?\n");
+			//fgets(readIn, 10, stdin);
+			flag = 1;
 		}
 	}
 
