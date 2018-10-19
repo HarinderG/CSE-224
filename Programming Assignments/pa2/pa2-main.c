@@ -25,17 +25,15 @@
 
 // Function prototypes
 void printSticks(int stickCount);
-int isValid(char *);
-
-// Global variable
-int totalSticks;
+int isInt(char *);
 
 int main(int argc, char **argv)
 {
 	// initialize variables
 	char readIn[10];
 	char whoGoes = 'u';
-	int flag = 0;
+	int flag, flag1 = 0;
+	int totalSticks, takeOut;
 
 	// Greet user
 	printf("Welcome to the stick game!\n");
@@ -47,8 +45,16 @@ int main(int argc, char **argv)
 	// If totalSticks is given in command line arg
 	if (argc == 2)
 	{
-		if (isValid(argv[1]))
+		if (isInt(argv[1]))
+		{
+			sscanf(argv[1], "%d", &totalSticks);
+			if (totalSticks < 10)
+			{
+				printf("Your number must be greater than or equal to 10!\n");
+				return 0;
+			}
 			printSticks(totalSticks); // Print intial stick #
+		}
 		else
 			return 0;
 	}
@@ -58,8 +64,16 @@ int main(int argc, char **argv)
 	{
 		fgets(readIn, 10, stdin);
 		
-		if (isValid(readIn))
+		if (isInt(readIn))
+		{
+			sscanf(readIn, "%d", &totalSticks);
+			if (totalSticks < 10)
+			{
+				printf("Your number must be greater than or equal to 10!\n");
+				return 0;
+			}
 			printSticks(totalSticks); // Print intial stick #
+		}
 		else
 			return 0;
 	}
@@ -68,13 +82,62 @@ int main(int argc, char **argv)
 	printf("You will start it off!\n");
 	while(flag == 0)
 	{
+		// USER GOES
 		if (whoGoes == 'u')
 		{
+			// Ask for tskeout, and check if its valid
 			printf("It is your turn! How many sticks would you like to take? 1, 2 or 3?\n");
-			//fgets(readIn, 10, stdin);
-			flag = 1;
+			flag1 = 0;
+			while(flag1 == 0)
+			{
+				fgets(readIn, 10, stdin);
+				if (isInt(readIn)) // if integer
+				{
+					takeOut = 0;
+					sscanf(readIn, "%d", &takeOut);
+					if ((takeOut > 3) || (takeOut < 1))
+						printf("Your number must be between 1 and 3!\n");
+					else
+						flag1 = 1;
+				}
+			}
+
+			totalSticks = totalSticks - takeOut;
+			printSticks(totalSticks);
+			if (totalSticks == 0)
+			{
+				flag = 1;
+			}
+			else
+				whoGoes = 'c';
+		}
+
+		// COMPUTER GOES
+		if (whoGoes == 'c')
+		{
+			printf("Now its my turn...\n");
+			takeOut = totalSticks % 4;
+			if (takeOut == 0)
+				takeOut = 1;
+			printf("I will take out %d stick(s)!\n", takeOut);
+			totalSticks = totalSticks - takeOut;
+			printSticks(totalSticks);
+			if (totalSticks == 0)
+			{
+				flag = 1;
+			}
+			else
+				whoGoes = 'u';
 		}
 	}
 
+	//Declare winner
+
+	if (whoGoes == 'c')
+	{
+		printf("The computer won!\n");
+	}
+	else
+		printf("You win!\n");
 	return 0;
 }
