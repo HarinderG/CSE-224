@@ -10,19 +10,23 @@
 # Functions
 anyKey() 	# Waits for user input
 {
-	read -n 1 -s -r -p "Press any key to continue"
+	read -n 1 -s -r -p "Press any key to continue."
 	echo
 }
 
+# User will input h l or c, and the case will assign guess accordingly, otherwise ask again.
 guess()
-{
-	guess=$((1 + RANDOM % $high))
+{	floor=$low
+	ceiling=$high
+	range=$(( $high - $low + 1))
+	guess=$(( $floor + RANDOM % $range ))
+
 	while true; do
-	    read -p "Is your number $guess? `echo $'\n> '`" HLC
+	    read -n 1 -p "Is your number $guess? `echo $'\n> '`" HLC
 	    case $HLC in
-	        [h]* ) high=$guess;break;;
-	        [l]* ) low=$guess;break;;
-			[c]* ) found=$guess;break;;
+	        [h]* ) high=$guess; ((guessCount++)); break;;
+	        [l]* ) low=$guess; ((guessCount++)); break;;
+			[c]* ) found=$guess; break;;
 	        * ) echo "Please answer (h) (l) or (c) (high, low or correct).";;
 	    esac
 	done
@@ -42,7 +46,9 @@ echo "number I guessed was too high ${bold}(h)${normal} or too low ${bold}(l)${n
 echo 
 
 # Check if arg was provided (User will not be able to choose <=2 since we are working with integers only)
+found=0
 low=1
+guessCount=1
 if [[ $1 -gt 2 ]];
 then
 	high=$1
@@ -53,6 +59,21 @@ else
 fi
 anyKey
 
-guess
+while [[ $found -eq 0 ]]; 
+do
+	guess
+	echo "The range is now $low to $high"
 
-echo "The range is now $low to $high"
+	# If the user is cheating, exit game
+	if [[ $high -le $low ]];
+	then
+		echo "I think you are cheating! Restart the game to try again."
+		exit
+	fi
+done
+
+# End of game
+echo "I knew it!"
+echo "It only took $guessCount tries."
+echo "Thanks for playing!"
+echo done
